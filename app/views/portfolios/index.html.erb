@@ -1,0 +1,48 @@
+<h1 style="margin-bottom: 5rem;">Portfolios de <%= @customer.name %></h1>
+
+<% @portfolios.each do |portfolio| %>
+  <div class="" style="margin-bottom: 5rem;">
+    <h2><%= portfolio.label %></h2>
+    <p> type : <%= portfolio.portfolio_type %></p>
+    <p>
+      Montant total :
+      <%= number_to_currency(
+        portfolio.total_amount,
+        unit: "€",
+        separator: ",",
+        delimiter: " "
+      ) %>
+    </p>
+
+    <div class="bg-gray-50 shadow rounded-lg p-5">
+      <h2>Tous vos investissements</h2>
+      <% if portfolio.investments.any? %>
+        <ul>
+          <% portfolio.portfolio_investments.each do |pi| %>
+            <li>
+              <strong><%= pi.investment.label %></strong> –
+              ISIN : <%= pi.investment.isin %> –
+              Prix :
+              <%= number_to_currency(
+                pi.investment.price,
+                unit: "€",
+                separator: ",",
+                delimiter: " "
+              ) %>
+              Montant investi :
+              <%= number_to_currency(
+                pi.amount,
+                unit: "€",
+                separator: ",",
+                delimiter: " "
+              ) %>
+              risque level : <%= pi.investment.sri %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>Aucun investissement pour ce portfolio.</p>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -7,6 +7,10 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
+  resources :customers, only: [:show] do
+    resources :portfolios, only: [:index]
+  end
+
   # Defines the root path route ("/")
   # root "posts#index"
 end

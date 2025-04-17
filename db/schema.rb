@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_16_100321) do
 
   create_table "investments", force: :cascade do |t|
     t.string "isin"
-    t.string "type"
+    t.string "investment_type"
     t.string "label"
     t.decimal "price"
     t.integer "sri"
