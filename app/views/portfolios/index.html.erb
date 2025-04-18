@@ -2,7 +2,7 @@
 
 <% @portfolios.each do |portfolio| %>
   <div class="" style="margin-bottom: 5rem;">
-    <h2><%= portfolio.label %></h2>
+    <h2><%= portfolio.label %> (id: <%= portfolio.id %>)</h2>
     <p> type : <%= portfolio.portfolio_type %></p>
     <p>
       Montant total :
@@ -12,6 +12,10 @@
         separator: ",",
         delimiter: " "
       ) %>
+    </p>
+
+    <p>
+      <%= link_to "Deposer, retirer ou faire un transfert", arbitrage_portfolio_path(portfolio), class: "btn btn-primary" %>
     </p>
 
     <div class="bg-gray-50 shadow rounded-lg p-5">

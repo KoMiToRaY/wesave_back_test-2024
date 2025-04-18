@@ -11,6 +11,21 @@ Rails.application.routes.draw do
     resources :portfolios, only: [:index]
   end
 
+  resources :portfolios, only: [] do
+    member do
+      get :arbitrage
+      post :deposit
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :portfolios, only: [:index] do
+        post :deposit, on: :member
+      end
+    end
+  end
+
   # Defines the root path route ("/")
   # root "posts#index"
 end
