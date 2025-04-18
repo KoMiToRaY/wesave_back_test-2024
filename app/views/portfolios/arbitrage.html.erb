@@ -1,4 +1,4 @@
-<h1>Tableau de bord</h1>
+<h1>Deposer, retirer ou faire un transfert</h1>
 
 <div>
   <h2>Déposer des fonds</h1>
@@ -38,6 +38,33 @@
 
     <div>
       <%= submit_tag "Retirer" %>
+    </div>
+  <% end %>
+</div>
+
+<div>
+  <h2>Faire un transfert</h2>
+
+  <%= form_with url: move_portfolio_path(@portfolio), method: :post do %>
+    <div>
+      <%= label_tag :from_id, "Depuis l'investissement" %><br>
+      <%= select_tag :from_id,
+        options_from_collection_for_select(@portfolio.portfolio_investments.includes(:investment), :investment_id, ->(pi) { pi.investment.label }) %>
+    </div>
+
+    <div>
+      <%= label_tag :to_id, "Vers l'investissement" %><br>
+      <%= select_tag :to_id,
+        options_from_collection_for_select(@portfolio.portfolio_investments.includes(:investment), :investment_id, ->(pi) { pi.investment.label }) %>
+    </div>
+
+    <div>
+      <%= label_tag :amount, "Montant à transférer (€)" %><br>
+      <%= number_field_tag :amount, 0, step: 0.01 %>
+    </div>
+
+    <div>
+      <%= submit_tag "Transférer" %>
     </div>
   <% end %>
 </div>

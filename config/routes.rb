@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       get :arbitrage
       post :deposit
       post :withdraw
+      post :move
     end
   end
 
@@ -24,6 +25,7 @@ Rails.application.routes.draw do
       resources :portfolios, only: [:index] do
         post :deposit, on: :member
         post :withdraw, on: :member
+        post :move, on: :member
       end
     end
   end

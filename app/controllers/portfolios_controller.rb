@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PortfoliosController < ApplicationController
-  before_action :set_portfolio, only: [:arbitrage, :deposit, :withdraw]
-  before_action :ensure_arbitrable_portfolio, only: [:arbitrage, :deposit, :withdraw]
+  before_action :set_portfolio, only: [:arbitrage, :deposit, :withdraw, :move]
+  before_action :ensure_arbitrable_portfolio, only: [:arbitrage, :deposit, :withdraw, :move]
 
   def index
     ap Customer.all
@@ -39,6 +39,26 @@ class PortfoliosController < ApplicationController
       investment_line.decrement!(:amount, params[:amount].to_f)
       @portfolio.update!(total_amount: @portfolio.portfolio_investments.sum(:amount))
       @success_message = "Le retrait a été effectué avec succès !"
+    end
+
+    @investments = @portfolio.portfolio_investments.includes(:investment)
+    render :arbitrage
+  end
+
+  def move
+    from = @portfolio.portfolio_investments.find_by(investment_id: params[:from_id])
+    to   = @portfolio.portfolio_investments.find_by(investment_id: params[:to_id])
+    amount = params[:amount].to_f
+
+    if from.nil? || to.nil?
+      @error_message = "Un ou les deux investissements sont introuvables dans ce portefeuille."
+    elsif from.amount < amount
+      @error_message = "Fonds insuffisants pour effectuer le transfert."
+    else
+      from.decrement!(:amount, amount)
+      to.increment!(:amount, amount)
+      @portfolio.update!(total_amount: @portfolio.portfolio_investments.sum(:amount))
+      @success_message = "Le transfert effectué avec succès."
     end
 
     @investments = @portfolio.portfolio_investments.includes(:investment)

@@ -3,8 +3,8 @@
 module Api
   module V1
     class PortfoliosController < ApplicationController
-      before_action :set_portfolio, only: [:deposit, :withdraw]
-      before_action :ensure_arbitrable_portfolio, only: [:deposit, :withdraw]
+      before_action :set_portfolio, only: [:deposit, :withdraw, :move]
+      before_action :ensure_arbitrable_portfolio, only: [:deposit, :withdraw, :move]
 
       def index
         file = Rails.root.join("data/level_1/portfolios.json")
@@ -48,6 +48,30 @@ module Api
 
         render json: {
           message: "Withdrawal successful",
+          portfolio: PortfolioFormatter.call([@portfolio]).first
+        }
+      end
+
+      def move
+        from = @portfolio.portfolio_investments.find_by(investment_id: params[:from_id])
+        to   = @portfolio.portfolio_investments.find_by(investment_id: params[:to_id])
+        amount = params[:amount].to_f
+
+        if from.nil? || to.nil?
+          return render json: { error: "One or both investments not found in this portfolio" }, status: :not_found
+        end
+
+        if from.amount < amount
+          return render json: { error: "Insufficient funds in the source investment" }, status: :unprocessable_entity
+        end
+
+        from.decrement!(:amount, amount)
+        to.increment!(:amount, amount)
+
+        @portfolio.update!(total_amount: @portfolio.portfolio_investments.sum(:amount))
+
+        render json: {
+          message: "Funds moved successfully",
           portfolio: PortfolioFormatter.call([@portfolio]).first
         }
       end
