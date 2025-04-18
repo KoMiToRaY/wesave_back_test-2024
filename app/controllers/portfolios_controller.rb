@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class PortfoliosController < ApplicationController
-  before_action :set_portfolio, only: [:arbitrage, :deposit]
-  before_action :ensure_arbitrable_portfolio, only: [:arbitrage, :deposit]
+  before_action :set_portfolio, only: [:arbitrage, :deposit, :withdraw]
+  before_action :ensure_arbitrable_portfolio, only: [:arbitrage, :deposit, :withdraw]
 
   def index
     ap Customer.all
@@ -25,6 +25,23 @@ class PortfoliosController < ApplicationController
 
     @investments = @portfolio.portfolio_investments.includes(:investment)
 
+    render :arbitrage
+  end
+
+  def withdraw
+    investment_line = @portfolio.portfolio_investments.find_by(investment_id: params[:investment_id])
+
+    if investment_line.nil?
+      @error_message = "Investissement introuvable dans ce portefeuille."
+    elsif investment_line.amount < params[:amount].to_f
+      @error_message = "Fonds insuffisants pour ce retrait."
+    else
+      investment_line.decrement!(:amount, params[:amount].to_f)
+      @portfolio.update!(total_amount: @portfolio.portfolio_investments.sum(:amount))
+      @success_message = "Le retrait a été effectué avec succès !"
+    end
+
+    @investments = @portfolio.portfolio_investments.includes(:investment)
     render :arbitrage
   end
 

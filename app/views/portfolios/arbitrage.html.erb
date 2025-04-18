@@ -1,21 +1,46 @@
-<h1>Déposer des fonds sur <%= @portfolio.label %></h1>
+<h1>Tableau de bord</h1>
 
-<%= form_with url: deposit_portfolio_path(@portfolio), method: :post do %>
-  <div>
-    <%= label_tag :investment_id, "Investissement" %><br>
-    <%= select_tag :investment_id,
-      options_from_collection_for_select(@portfolio.portfolio_investments.includes(:investment), :investment_id, ->(pi) { pi.investment.label }) %>
-  </div>
+<div>
+  <h2>Déposer des fonds</h1>
 
-  <div>
-    <%= label_tag :amount, "Montant (€)" %><br>
-    <%= number_field_tag :amount, 0, step: 0.01 %>
-  </div>
+  <%= form_with url: deposit_portfolio_path(@portfolio), method: :post do %>
+    <div>
+      <%= label_tag :investment_id, "Investissement" %><br>
+      <%= select_tag :investment_id,
+        options_from_collection_for_select(@portfolio.portfolio_investments.includes(:investment), :investment_id, ->(pi) { pi.investment.label }) %>
+    </div>
 
-  <div>
-    <%= submit_tag "💰 Déposer" %>
-  </div>
-<% end %>
+    <div>
+      <%= label_tag :amount, "Montant (€)" %><br>
+      <%= number_field_tag :amount, 0, step: 0.01 %>
+    </div>
+
+    <div>
+      <%= submit_tag "Déposer" %>
+    </div>
+  <% end %>
+</div>
+
+<div>
+  <h2>Faire un retrait</h2>
+
+  <%= form_with url: withdraw_portfolio_path(@portfolio), method: :post do %>
+    <div>
+      <%= label_tag :investment_id, "Investissement" %><br>
+      <%= select_tag :investment_id,
+        options_from_collection_for_select(@portfolio.portfolio_investments.includes(:investment), :investment_id, ->(pi) { pi.investment.label }) %>
+    </div>
+
+    <div>
+      <%= label_tag :amount, "Montant à retirer (€)" %><br>
+      <%= number_field_tag :amount, 0, step: 0.01 %>
+    </div>
+
+    <div>
+      <%= submit_tag "Retirer" %>
+    </div>
+  <% end %>
+</div>
 
 <% if @success_message %>
   <div style="background-color: #e6ffed; border: 1px solid #00b341; padding: 10px; margin-bottom: 1rem;">
