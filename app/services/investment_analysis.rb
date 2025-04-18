@@ -12,7 +12,7 @@ class InvestmentAnalysis
   def perform
     {
       portfolios: @portfolios.map { |p| analyze_portfolio(p) },
-      global: {}
+      global: analyze_global_risk
     }
   end
 
@@ -54,5 +54,23 @@ class InvestmentAnalysis
       .transform_values do |group|
         ((group.sum(&:amount).to_f / total) * 100).round(2)
       end
+  end
+
+  # Même formule que pour average_risk mais appliqué globalement sur toutes les lignes d’investissement du client.
+  # Référence : https://blog.nalo.fr/lexique/moyenne-ponderee/
+  def analyze_global_risk
+    lines = @portfolios.flat_map(&:portfolio_investments)
+    total = lines.sum(&:amount)
+
+    risk = if total.zero?
+      0
+    else
+      lines.sum { |line| line.amount.to_f * line.investment.sri.to_f } / total
+    end
+
+    {
+      risk: risk.round(2),
+      allocation: allocation_by_type(lines, total)
+    }
   end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PortfoliosController < ApplicationController
+  helper RiskLabelHelper
+
   before_action :set_portfolio, only: [:arbitrage, :deposit, :withdraw, :move]
   before_action :ensure_arbitrable_portfolio, only: [:arbitrage, :deposit, :withdraw, :move]
 

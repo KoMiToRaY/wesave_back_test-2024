@@ -1,4 +1,20 @@
-<h1 style="margin-bottom: 5rem;">Portfolios de <%= @customer.name %></h1>
+<div style="margin-bottom: 5rem;">
+  <h1>Portfolios de <%= @customer.name %></h1>
+
+  <h2>Indicateurs globaux</h2>
+
+  <p>
+    Risque global : <strong><%= @indicators[:global][:risk] %></strong>
+    (<%= risk_label(@indicators[:global][:risk]) %>)
+  </p>
+
+  <p>Répartition globale :</p>
+  <ul>
+    <% @indicators[:global][:allocation].each do |type, percent| %>
+      <li><%= type.capitalize %> : <%= percent %> %</li>
+    <% end %>
+  </ul>
+</div>
 
 <% @portfolios.each do |portfolio| %>
   <div class="" style="margin-bottom: 5rem;">
