@@ -18,6 +18,21 @@
       <%= link_to "Deposer, retirer ou faire un transfert", arbitrage_portfolio_path(portfolio), class: "btn btn-primary" %>
     </p>
 
+    <div>
+      <% analysis = @indicators_by_portfolio[portfolio.id] %>
+
+      <% if analysis %>
+        <p><strong>Risque moyen :</strong> <%= analysis[:risk] %></p>
+
+        <p><strong>Répartition :</strong></p>
+        <ul>
+          <% analysis[:allocation].each do |type, percent| %>
+            <li><%= type.capitalize %> : <%= percent %> %</li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+
     <div class="bg-gray-50 shadow rounded-lg p-5">
       <h2>Investissements lié :</h2>
       <% if portfolio.investments.any? %>

@@ -10,6 +10,9 @@ class PortfoliosController < ApplicationController
 
     ap @customer.portfolios
     @portfolios = @customer.portfolios.includes(portfolio_investments: :investment)
+
+    @indicators = InvestmentAnalysis.call(@customer)
+    @indicators_by_portfolio = @indicators[:portfolios].index_by { |p| p[:id] }
   end
 
   def deposit
