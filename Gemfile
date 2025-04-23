@@ -38,6 +38,10 @@ gem "bootsnap", require: false
 # Used for graphics in historical_values.html.erb
 gem "chartkick", "~> 5.0"
 
+# Used for style
+gem 'tailwindcss-rails'
+gem 'sprockets-rails'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]
