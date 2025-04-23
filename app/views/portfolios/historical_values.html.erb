@@ -5,6 +5,12 @@
   <%= @portfolio.yield_global %> %
 </p>
 
+<h2>Évolution de la valeur du portefeuille</h2>
+
+<%= line_chart @historical_values.map { |hv| [hv.date, hv.amount] } %>
+
+<h2>Details sous forme de tableau</h2>
+
 <% if @historical_values.any? %>
   <table>
     <thead>
