@@ -14,6 +14,13 @@
       <li><%= type.capitalize %> : <%= percent %> %</li>
     <% end %>
   </ul>
+
+  <p>Frais globaux</p>
+  <ul>
+    <li>Total frais ce mois-ci : <%= number_to_currency(@global_fees[:total_current]) %></li>
+    <li>Total cumulés : <%= number_to_currency(@global_fees[:total_cumulative]) %></li>
+    <li>Taux moyen appliqué : <%= (@global_fees[:average_rate] * 100).round(2) %> %</li>
+  </ul>
 </div>
 
 <% @portfolios.each do |portfolio| %>
@@ -48,6 +55,16 @@
           <% end %>
         </ul>
       <% end %>
+    </div>
+
+    <div>
+      <% fee = @fees.find { |f| f[:id] == portfolio.id } %>
+      <h4>Frais</h4>
+      <ul>
+        <li>Taux actuel : <%= (fee[:current_rate] * 100).round(2) %> %</li>
+        <li>Frais ce mois-ci : <%= number_to_currency(fee[:current_fee]) %></li>
+        <li>Frais cumulés : <%= number_to_currency(fee[:total_fees]) %></li>
+      </ul>
     </div>
 
     <div class="bg-gray-50 shadow rounded-lg p-5">

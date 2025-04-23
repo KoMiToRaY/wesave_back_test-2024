@@ -15,6 +15,23 @@ class PortfoliosController < ApplicationController
 
     @indicators = InvestmentAnalysis.call(@customer)
     @indicators_by_portfolio = @indicators[:portfolios].index_by { |p| p[:id] }
+
+    @fees = @portfolios.map do |portfolio|
+      calc = PortfolioFeeCalculator.new(portfolio)
+
+      {
+        id: portfolio.id,
+        current_rate: calc.current_rate,
+        current_fee: calc.current_month_fee,
+        total_fees: calc.total_fees_paid
+      }
+    end
+
+    @global_fees = {
+      total_current: @fees.sum { |f| f[:current_fee] },
+      total_cumulative: @fees.sum { |f| f[:total_fees] },
+      average_rate: (@fees.sum { |f| f[:current_rate] } / @fees.size.to_f).round(4)
+    }
   end
 
   def deposit

@@ -1,4 +1,5 @@
-# app/services/investment_analysis.rb
+# frozen_string_literal: true
+
 class InvestmentAnalysis
   def self.call(customer)
     new(customer).perform
