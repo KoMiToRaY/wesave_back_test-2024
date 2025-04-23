@@ -70,6 +70,11 @@ class PortfoliosController < ApplicationController
     render :arbitrage
   end
 
+  def historical_values
+    @portfolio = Portfolio.find(params[:id])
+    @historical_values = @portfolio.historical_values.order(:date)
+  end
+
   private
 
   def set_portfolio

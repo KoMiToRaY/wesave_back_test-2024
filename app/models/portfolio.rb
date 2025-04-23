@@ -6,4 +6,15 @@ class Portfolio < ApplicationRecord
   has_many :investments, through: :portfolio_investments
 
   has_many :historical_values, dependent: :destroy
+
+  def yield_global
+    first = historical_values.order(:date).first
+    last  = historical_values.order(:date).last
+
+    return 0 if first.nil? || last.nil? || first.amount.zero?
+
+    # réutilisation de la formule ($$Y = (\dfrac{Vc}{Vi} - 1) \times 100$$)
+    # exprimée en LaTeX et trouvé dans le fichier LEVELS.md
+    (((last.amount / first.amount) - 1) * 100).round(2)
+  end
 end

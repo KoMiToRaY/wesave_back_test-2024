@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :portfolios, only: [] do
     member do
       get :arbitrage
+      get :historical_values
       post :deposit
       post :withdraw
       post :move
