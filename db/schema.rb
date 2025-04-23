@@ -10,11 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_17_112231) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_23_081714) do
   create_table "customers", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "historical_values", force: :cascade do |t|
+    t.integer "portfolio_id", null: false
+    t.date "date"
+    t.decimal "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["portfolio_id"], name: "index_historical_values_on_portfolio_id"
   end
 
   create_table "investments", force: :cascade do |t|
@@ -48,6 +57,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_17_112231) do
     t.index ["customer_id"], name: "index_portfolios_on_customer_id"
   end
 
+  add_foreign_key "historical_values", "portfolios"
   add_foreign_key "portfolio_investments", "investments"
   add_foreign_key "portfolio_investments", "portfolios"
   add_foreign_key "portfolios", "customers"

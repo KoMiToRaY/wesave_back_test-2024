@@ -83,3 +83,23 @@ end
 
 puts "Données du niveau 1 importées avec succès"
 
+# import des valeurs du fichier historical_values (level 4)
+file = Rails.root.join("data/level_4/historical_values.json")
+data = JSON.parse(File.read(file))
+
+data.each do |portfolio_label, entries|
+  portfolio = Portfolio.find_by(label: portfolio_label)
+
+  next unless portfolio
+
+  entries.each do |entry|
+    date = Date.strptime(entry["date"], "%d-%m-%y")
+    amount = entry["amount"].to_f
+
+    portfolio.historical_values.find_or_create_by!(date: date) do |hv|
+      hv.amount = amount
+    end
+  end
+end
+
+puts "Données du niveau 4 importées avec succès"

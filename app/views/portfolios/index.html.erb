@@ -38,7 +38,7 @@
       <% analysis = @indicators_by_portfolio[portfolio.id] %>
 
       <% if analysis %>
-        <p><strong>Risque moyen :</strong> <%= analysis[:risk] %></p>
+        <p><strong>Risque moyen :</strong> <%= analysis[:risk] %> (<%= risk_label(analysis[:risk]) %>)</p>
 
         <p><strong>Répartition :</strong></p>
         <ul>
