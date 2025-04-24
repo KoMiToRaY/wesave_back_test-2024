@@ -34,6 +34,9 @@ http://localhost:3000/customers/1/portfolios
 http://localhost:3000/portfolios/47/arbitrage
 http://localhost:3000/portfolios/47/historical_values
 
+le retour de l'api est disponible sur cette adresse :
+http://localhost:3000/api/v1/customers/1/portfolios
+
 
 # WeSave Backend Challenge - iSave
 
