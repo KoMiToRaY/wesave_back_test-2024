@@ -10,10 +10,12 @@
   <%# Used for graphics in historical_values.html.erb %>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js"></script>
+
+  <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 </head>
 
 <body class="<%= controller_name.deconstantize %> <%= controller_name.demodulize %> <%= action_name %>">
-  <main>
+  <main class="container mx-auto mt-10">
     <%= yield %>
   </main>
 </body>

@@ -1,116 +1,172 @@
-<div style="margin-bottom: 5rem;">
-  <h1>Portfolios de <%= @customer.name %></h1>
+<div class="flex flex-wrap md:-mx-5">
+  <div class="w-full md:w-2/3 md:px-5">
+    <div style="margin-bottom: 5rem;">
+      <h1 class="text-5xl font-bold text-gray-800 mb-12"> 👋 Bonjour,
+        <span class="text-sky-600">
+          <%= @customer.name %>
+        </span>
+      </h1>
 
-  <h2>Indicateurs globaux</h2>
+      <div class="rounded-lg p-5 bg-white shadow-md mb-8 border border-gray-200">
+          <h2 class="text-xl text-gray-800 font-semibold mb-5">Indicateurs globaux de votre portefeuil</h2>
 
-  <p>
-    Risque global : <strong><%= @indicators[:global][:risk] %></strong>
-    (<%= risk_label(@indicators[:global][:risk]) %>)
-  </p>
+          <p class="text-gray-800 mb-5 font-semibold">Frais mensuels : <strong class="text-sky-600">15 €</strong></p>
 
-  <p>Répartition globale :</p>
-  <ul>
-    <% @indicators[:global][:allocation].each do |type, percent| %>
-      <li><%= type.capitalize %> : <%= percent %> %</li>
-    <% end %>
-  </ul>
+          <hr class="border-gray-300">
 
-  <p>Frais globaux</p>
-  <ul>
-    <li>Total frais ce mois-ci : <%= number_to_currency(@global_fees[:total_current]) %></li>
-    <li>Total cumulés : <%= number_to_currency(@global_fees[:total_cumulative]) %></li>
-    <li>Taux moyen appliqué : <%= (@global_fees[:average_rate] * 100).round(2) %> %</li>
-  </ul>
-</div>
+          <p class="text-gray-600 my-5">
+            <span class="text-gray-800 font-semibold">Risque global : </span>
+            <strong>
+              <%= @indicators[:global][:risk] %>
+            </strong>
+            <span class="<%= risk_color_class(@indicators[:global][:risk]) %>">
+              (<%= risk_label(@indicators[:global][:risk]) %>)
+            </span>
+          </p>
 
-<% @portfolios.each do |portfolio| %>
-  <div class="" style="margin-bottom: 5rem;">
-    <h2><%= portfolio.label %> (id: <%= portfolio.id %>)</h2>
-    <p> type : <%= portfolio.portfolio_type %></p>
-    <p>
-      Montant total :
-      <%= number_to_currency(
-        portfolio.total_amount,
-        unit: "€",
-        separator: ",",
-        delimiter: " "
-      ) %>
-    </p>
+          <hr class="border-gray-300">
 
-    <p>
-      <%= link_to "Deposer, retirer ou faire un transfert", arbitrage_portfolio_path(portfolio), class: "btn btn-primary" %>
-      <%= link_to "Voir l'historique", historical_values_portfolio_path(portfolio), class: "btn btn-primary" %>
-    </p>
+          <div class="text-gray-600 my-5">
+            <p class="text-gray-800 font-semibold">Répartition globale :</p>
+            <ul>
+              <% @indicators[:global][:allocation].each do |type, percent| %>
+                <li><%= type.capitalize %> : <%= percent %> %</li>
+              <% end %>
+            </ul>
+          </div>
 
-    <div>
-      <% analysis = @indicators_by_portfolio[portfolio.id] %>
+          <hr class="border-gray-300">
 
-      <% if analysis %>
-        <p><strong>Risque moyen :</strong> <%= analysis[:risk] %> (<%= risk_label(analysis[:risk]) %>)</p>
-
-        <p><strong>Répartition :</strong></p>
-        <ul>
-          <% analysis[:allocation].each do |type, percent| %>
-            <li><%= type.capitalize %> : <%= percent %> %</li>
-          <% end %>
-        </ul>
-      <% end %>
-    </div>
-
-    <div>
-      <% fee = @fees.find { |f| f[:id] == portfolio.id } %>
-      <h4>Frais</h4>
-      <ul>
-        <li>Taux actuel : <%= (fee[:current_rate] * 100).round(2) %> %</li>
-        <li>Frais ce mois-ci : <%= number_to_currency(fee[:current_fee]) %></li>
-        <li>Frais cumulés : <%= number_to_currency(fee[:total_fees]) %></li>
-      </ul>
-    </div>
-
-    <div class="bg-gray-50 shadow rounded-lg p-5">
-      <h2>Investissements lié :</h2>
-      <% if portfolio.investments.any? %>
-        <% portfolio.portfolio_investments.each do |pi| %>
-          <div>
-            <h3><strong><%= pi.investment.label %></strong></h3>
+          <div class="text-gray-600 mt-5">
+            <p class="text-gray-800 font-semibold">Frais globaux :</p>
             <ul>
               <li>
-                ISIN : <%= pi.investment.isin %>
+                Total frais ce mois-ci :
+                <%= number_to_currency(@global_fees[:total_current], unit: "€", separator: ",", delimiter: " ") %>
               </li>
-
               <li>
-                Prix :
-                <%= number_to_currency(
-                  pi.investment.price,
-                  unit: "€",
-                  separator: ",",
-                  delimiter: " "
-                ) %>
+                Total cumulés :
+                <%= number_to_currency(@global_fees[:total_cumulative], unit: "€", separator: ",", delimiter: " ") %>
               </li>
-
               <li>
-                Montant investi :
-                <%= number_to_currency(
-                  pi.amount,
-                  unit: "€",
-                  separator: ",",
-                  delimiter: " "
-                ) %>
-              </li>
-
-              <li>
-                risque level : <%= pi.investment.sri %>
-              </li>
-
-              <li>
-                part : <%= ((pi.amount.to_f / portfolio.total_amount.to_f) * 100).round(2) %> %
+                Taux moyen appliqué : <%= (@global_fees[:average_rate] * 100).round(2) %> %
               </li>
             </ul>
           </div>
+      </div>
+    </div>
+
+    <% @portfolios.each do |portfolio| %>
+      <div class="c-portfolio mb-12 p-6 bg-white shadow-md rounded-2xl border border-gray-200 p-5">
+        <h2 class="text-2xl font-bold text-sky-600 mb-2" data-id="<%= portfolio.id %>">
+          <%= portfolio.label %>
+        </h2>
+
+        <p class="text-gray-600 mb-1">
+          Type :
+          <span class="font-medium">
+            <%= portfolio.portfolio_type %>
+          </span>
+        </p>
+
+        <p class="text-gray-600 mb-4">
+          Montant total :
+          <span class="font-semibold text-green-600">
+            <%= number_to_currency(portfolio.total_amount, unit: "€", separator: ",", delimiter: " ") %>
+          </span>
+        </p>
+
+        <div class="flex flex-wrap gap-4 mb-6">
+          <%= link_to "Deposer, retirer ou faire un transfert", arbitrage_portfolio_path(portfolio),
+                class: "bg-sky-400 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition font-semibold" %>
+          <%= link_to "Historique du portefeuille", historical_values_portfolio_path(portfolio),
+                class: "bg-slate-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-slate-200 transition font-semibold" %>
+        </div>
+
+        <% analysis = @indicators_by_portfolio[portfolio.id] %>
+        <% if analysis %>
+          <div class="bg-sky-50 border-l-4 border-sky-400 p-4 rounded-md mb-6">
+            <p class="text-sm text-sky-700 font-semibold">Risque moyen :
+              <span class="<%= risk_color_class(analysis[:risk]) %>">
+                <%= analysis[:risk] %> (<%= risk_label(analysis[:risk]) %>)
+              </span>
+            </p>
+            <p class="text-sm text-gray-600 mt-2 font-medium">Répartition :</p>
+            <ul class="ml-4 list-disc text-sm text-gray-700">
+              <% analysis[:allocation].each do |type, percent| %>
+                <li><%= type.capitalize %> : <%= percent %> %</li>
+              <% end %>
+            </ul>
+          </div>
         <% end %>
-      <% else %>
-        <p>Aucun investissement pour ce portfolio.</p>
-      <% end %>
+
+        <% fee = @fees.find { |f| f[:id] == portfolio.id } %>
+        <div class="bg-slate-50 border border-gray-200 rounded-md p-4 mb-6">
+          <h4 class="font-semibold text-gray-800 mb-2">Frais</h4>
+          <ul class="text-sm text-gray-700 space-y-1">
+            <li>
+              Taux actuel : <%= (fee[:current_rate] * 100).round(2) %> %
+            </li>
+            <li>
+              Frais ce mois-ci :
+              <%= number_to_currency(fee[:current_fee], unit: "€", separator: ",", delimiter: " ") %>
+            </li>
+            <li>
+              Frais cumulés :
+              <%= number_to_currency(fee[:total_fees], unit: "€", separator: ",", delimiter: " ") %>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-slate-50 border border-gray-200 p-5 rounded-md">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Investissements liés :</h3>
+          <% if portfolio.investments.any? %>
+            <div class="space-y-4">
+              <% portfolio.portfolio_investments.each do |pi| %>
+                <div class="bg-slate-100 border border-gray-200 rounded-lg p-4">
+                  <h4 class="text-md font-bold text-gray-800 mb-1"><%= pi.investment.label %></h4>
+                  <ul class="text-sm text-gray-700 space-y-1">
+                    <li>ISIN : <%= pi.investment.isin %></li>
+                    <li>Prix : <%= number_to_currency(pi.investment.price, unit: "€", separator: ",", delimiter: " ") %></li>
+                    <li>Montant investi : <%= number_to_currency(pi.amount, unit: "€", separator: ",", delimiter: " ") %></li>
+                    <li>Risque level : <%= pi.investment.sri %></li>
+                    <li>Part : <%= ((pi.amount.to_f / portfolio.total_amount.to_f) * 100).round(2) %> %</li>
+                  </ul>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-gray-500 italic">Aucun investissement pour ce portefeuille.</p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="w-full md:w-1/3 md:px-5">
+    <div
+      class="sticky top-6 bg-sky-600 rounded-lg p-5 text-sm text-white leading-relaxed"
+      style="margin-top: 6rem;"
+    >
+      <h3 class="text-white font-semibold text-lg mb-2">Pourquoi choisir iSave ?</h3>
+      <ul class="list-disc list-inside space-y-2">
+        <li>
+          Suivi détaillé de vos portefeuilles en temps réel avec indicateurs clairs.
+        </li>
+        <li>
+          Analyse des risques et répartition automatique par type d’investissement.
+        </li>
+        <li>
+          Historique complet de vos performances semaine par semaine.
+        </li>
+        <li>
+          Suivi précis des frais appliqués et comparatif entre portefeuilles.
+        </li>
+        <li>
+          Interface simple, rapide et conçue pour les investisseurs autonomes.
+        </li>
+      </ul>
+      <p class="mt-4 text-white font-semibold">Votre patrimoine, votre vision.</p>
     </div>
   </div>
-<% end %>
+</div>

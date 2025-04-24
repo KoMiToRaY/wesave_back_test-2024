@@ -2,4 +2,6 @@
 
 class Customer < ApplicationRecord
   has_many :portfolios
+
+  validates :name, presence: true
 end

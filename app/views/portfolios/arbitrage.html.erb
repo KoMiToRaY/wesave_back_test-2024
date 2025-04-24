@@ -1,82 +1,116 @@
-<h1>Deposer, retirer ou faire un transfert</h1>
+<div class="max-w-3xl mx-auto mt-8 space-y-8">
 
-<div>
-  <h2>Déposer des fonds</h1>
-
-  <%= form_with url: deposit_portfolio_path(@portfolio), method: :post do %>
-    <div>
-      <%= label_tag :investment_id, "Investissement" %><br>
-      <%= select_tag :investment_id,
-        options_from_collection_for_select(@portfolio.portfolio_investments.includes(:investment), :investment_id, ->(pi) { pi.investment.label }) %>
-    </div>
-
-    <div>
-      <%= label_tag :amount, "Montant (€)" %><br>
-      <%= number_field_tag :amount, 0, step: 0.01 %>
-    </div>
-
-    <div>
-      <%= submit_tag "Déposer" %>
+  <% if @success_message %>
+    <div class="bg-green-100 border border-green-400 text-green-700 p-4 rounded-md">
+      <%= @success_message %>
     </div>
   <% end %>
-</div>
 
-<div>
-  <h2>Faire un retrait</h2>
-
-  <%= form_with url: withdraw_portfolio_path(@portfolio), method: :post do %>
-    <div>
-      <%= label_tag :investment_id, "Investissement" %><br>
-      <%= select_tag :investment_id,
-        options_from_collection_for_select(@portfolio.portfolio_investments.includes(:investment), :investment_id, ->(pi) { pi.investment.label }) %>
-    </div>
-
-    <div>
-      <%= label_tag :amount, "Montant à retirer (€)" %><br>
-      <%= number_field_tag :amount, 0, step: 0.01 %>
-    </div>
-
-    <div>
-      <%= submit_tag "Retirer" %>
+  <% if @error_message %>
+    <div class="bg-red-100 border border-red-400 text-red-700 p-4 rounded-md">
+      <%= @error_message %>
     </div>
   <% end %>
-</div>
 
-<div>
-  <h2>Faire un transfert</h2>
+  <h1 class="text-3xl font-bold text-sky-600 mb-12">
+    Déposer, retirer ou transférer
+  </h1>
 
-  <%= form_with url: move_portfolio_path(@portfolio), method: :post do %>
-    <div>
-      <%= label_tag :from_id, "Depuis l'investissement" %><br>
-      <%= select_tag :from_id,
-        options_from_collection_for_select(@portfolio.portfolio_investments.includes(:investment), :investment_id, ->(pi) { pi.investment.label }) %>
-    </div>
+  <!-- Dépôt -->
+  <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Déposer des fonds</h2>
 
-    <div>
-      <%= label_tag :to_id, "Vers l'investissement" %><br>
-      <%= select_tag :to_id,
-        options_from_collection_for_select(@portfolio.portfolio_investments.includes(:investment), :investment_id, ->(pi) { pi.investment.label }) %>
-    </div>
+    <%= form_with url: deposit_portfolio_path(@portfolio), method: :post, class: "space-y-4" do %>
+      <div>
+        <%= label_tag :investment_id, "Investissement", class: "block text-sm font-medium text-gray-700" %>
+        <%= select_tag :investment_id,
+              options_from_collection_for_select(
+                @portfolio.portfolio_investments.includes(:investment),
+                :investment_id,
+                ->(pi) { pi.investment.label }
+              ),
+              class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-50 p-3" %>
+      </div>
 
-    <div>
-      <%= label_tag :amount, "Montant à transférer (€)" %><br>
-      <%= number_field_tag :amount, 0, step: 0.01 %>
-    </div>
+      <div>
+        <%= label_tag :amount, "Montant (€)", class: "block text-sm font-medium text-gray-700" %>
+        <%= number_field_tag :amount, 0, step: 0.01,
+              class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-50 p-3" %>
+      </div>
 
-    <div>
-      <%= submit_tag "Transférer" %>
-    </div>
-  <% end %>
-</div>
-
-<% if @success_message %>
-  <div style="background-color: #e6ffed; border: 1px solid #00b341; padding: 10px; margin-bottom: 1rem;">
-    <%= @success_message %>
+      <div>
+        <%= submit_tag "Déposer",
+              class: "bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700" %>
+      </div>
+    <% end %>
   </div>
-<% end %>
 
-<% if @error_message %>
-  <div style="background-color: #ffe6e6; border: 1px solid #e00; padding: 10px; margin-bottom: 1rem;">
-    <%= @error_message %>
+  <!-- Retrait -->
+  <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Retirer des fonds</h2>
+
+    <%= form_with url: withdraw_portfolio_path(@portfolio), method: :post, class: "space-y-4" do %>
+      <div>
+        <%= label_tag :investment_id, "Investissement", class: "block text-sm font-medium text-gray-700" %>
+        <%= select_tag :investment_id,
+              options_from_collection_for_select(
+                @portfolio.portfolio_investments.includes(:investment),
+                :investment_id,
+                ->(pi) { pi.investment.label }
+              ),
+              class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-50 p-3" %>
+      </div>
+
+      <div>
+        <%= label_tag :amount, "Montant à retirer (€)", class: "block text-sm font-medium text-gray-700" %>
+        <%= number_field_tag :amount, 0, step: 0.01,
+              class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-50 p-3" %>
+      </div>
+
+      <div>
+        <%= submit_tag "Retirer",
+              class: "bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700" %>
+      </div>
+    <% end %>
   </div>
-<% end %>
+
+  <!-- Transfert -->
+  <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">Transférer des fonds</h2>
+
+    <%= form_with url: move_portfolio_path(@portfolio), method: :post, class: "space-y-4" do %>
+      <div>
+        <%= label_tag :from_id, "Depuis l'investissement", class: "block text-sm font-medium text-gray-700" %>
+        <%= select_tag :from_id,
+              options_from_collection_for_select(
+                @portfolio.portfolio_investments.includes(:investment),
+                :investment_id,
+                ->(pi) { pi.investment.label }
+              ),
+              class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-50 p-3" %>
+      </div>
+
+      <div>
+        <%= label_tag :to_id, "Vers l'investissement", class: "block text-sm font-medium text-gray-700" %>
+        <%= select_tag :to_id,
+              options_from_collection_for_select(
+                @portfolio.portfolio_investments.includes(:investment),
+                :investment_id,
+                ->(pi) { pi.investment.label }
+              ),
+              class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-50 p-3" %>
+      </div>
+
+      <div>
+        <%= label_tag :amount, "Montant à transférer (€)", class: "block text-sm font-medium text-gray-700" %>
+        <%= number_field_tag :amount, 0, step: 0.01,
+              class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-50 p-3" %>
+      </div>
+
+      <div>
+        <%= submit_tag "Transférer",
+              class: "bg-sky-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700" %>
+      </div>
+    <% end %>
+  </div>
+</div>

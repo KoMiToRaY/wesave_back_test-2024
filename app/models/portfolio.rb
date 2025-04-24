@@ -2,10 +2,13 @@
 
 class Portfolio < ApplicationRecord
   belongs_to :customer
-  has_many :portfolio_investments
+  has_many :portfolio_investments, dependent: :destroy
   has_many :investments, through: :portfolio_investments
-
   has_many :historical_values, dependent: :destroy
+
+  validates :label, presence: true
+  validates :portfolio_type, presence: true
+  validates :total_amount, presence: true, numericality: true
 
   def yield_global
     first = historical_values.order(:date).first
