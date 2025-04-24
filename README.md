@@ -1,3 +1,40 @@
+### 1. Démarrer le projet
+
+build le projet
+
+```sh
+$ docker-compose build
+```
+
+Démarrer les conteneurs depuis le répertoire du projet:
+
+
+```sh
+$ docker-compose up
+```
+
+### 2. Initialisation de la base de données
+J'ai créer des scripts dans les seeds qui permettent d'importer la data dans la db du projet,
+toutes les actions effectué sur le site (depot, retrait et transfert sont sauvegarder dans la db)
+
+```sh
+$ docker exec -it wesave_back_app bundle exec rails db:create db:migrate db:seed
+```
+
+### 3. Assets
+En cas de problème avec les assets ou si la page n'est pas correctement
+stylisé utiliser la commande suivante puis relancer le projet :
+
+```sh
+$ docker exec wesave_back_app bundle exec rails assets:precompile
+```
+
+voici un exemple d'urls :
+http://localhost:3000/customers/1/portfolios
+http://localhost:3000/portfolios/47/arbitrage
+http://localhost:3000/portfolios/47/historical_values
+
+
 # WeSave Backend Challenge - iSave
 
 ## Requirements
@@ -73,39 +110,3 @@ Please also note that:
 - All asset prices are defined in the same currency.
 
 **Good luck!**
-
-### 1. Démarrer le projet
-
-build le projet
-
-```sh
-$ docker-compose build
-```
-
-Démarrer les conteneurs depuis le répertoire du projet:
-
-
-```sh
-$ docker-compose up
-```
-
-### 2. Initialisation de la base de données
-J'ai créer des scripts dans les seeds qui permettent d'importer la data dans la db du projet,
-toutes les actions effectué sur le site (depot, retrait et transfert sont sauvegarder dans la db)
-
-```sh
-$ docker exec -it wesave_back_app bundle exec rails db:create db:migrate db:seed
-```
-
-### 3. Assets
-En cas de problème avec les assets ou si la page n'est pas correctement
-stylisé utiliser la commande suivante puis relancer le projet :
-
-```sh
-$ docker exec wesave_back_app bundle exec rails assets:precompile
-```
-
-voici un exemple d'urls :
-http://localhost:3000/customers/1/portfolios
-http://localhost:3000/portfolios/47/arbitrage
-http://localhost:3000/portfolios/47/historical_values
