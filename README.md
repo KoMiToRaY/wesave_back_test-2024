@@ -30,9 +30,9 @@ $ docker exec wesave_back_app bundle exec rails assets:precompile
 ```
 
 voici un exemple d'urls :
-http://localhost:3000/customers/1/portfolios
-http://localhost:3000/portfolios/47/arbitrage
-http://localhost:3000/portfolios/47/historical_values
+- http://localhost:3000/customers/1/portfolios
+- http://localhost:3000/portfolios/47/arbitrage
+- http://localhost:3000/portfolios/47/historical_values
 
 le retour de l'api est disponible sur cette adresse :
 http://localhost:3000/api/v1/customers/1/portfolios
